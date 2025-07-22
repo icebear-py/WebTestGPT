@@ -34,15 +34,14 @@ def call_llm(system_prompt: str, user_prompt: str, conversation_history: list):
 def build_prompt(log_content: str) -> list:
     system_prompt = """
 You are an expert software tester. A Playwright test script was generated and executed on a webpage. Below is the test log output.
-From the given log, generate a coder understandable response. Do not add extra empty lines , keep the response as minimal as possible, maximum 2 line space Use this structure:
-
+From the given log, generate a coder understandable response. Do not add extra empty lines , keep the response as minimal as possible, test the functionality of input url from result log
+maximum 2 line space Use this structure:
   "Small description of website , what it does , how is its performance , how many elements are working or failing, how is the structure , etc." 
-  "<element_name_or_identifier> followed with a ✅ or ❌ symbol
-  "working" | "not working"
+  "<element_name_or_identifier> followed with a ✅ or ❌ symbol (working/not working)
   "<brief explanation of what this element does and whether it's functioning (one line max)>",
   "solution" (only if not working): 
-    "fix": "<how to fix the code>",
-    "correct_code": "<updated code snippet>"
+    "fix" "<how to fix the code>",
+    "correct_code" "<updated code snippet>" in a code block
     
 Be flexible — element names, class names, and IDs may differ. Generalize issues if exact matches are missing, but maintain precision when suggesting fixes. 
 Avoid repetition and unnecessary tokens. Keep the response concise but complete. Use conversation history to infer the element names and identity and the purpose of webapp. 
