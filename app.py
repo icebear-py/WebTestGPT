@@ -26,28 +26,24 @@ def generate_script():
         dom_info = extract_dom(url)
         if dom_info['isError']==1:
             return {'error':dom_info['error']},400
-        test_script = generate_test_script(dom_info)
         return Response(
-            stream_with_context(test_script),
-            mimetype='text/plain'
+            stream_with_context(generate_test_script(dom_info)),
+            mimetype='text/event-stream',
+            headers={'X-Accel-Buffering': 'no', 'Cache-Control': 'no-cache'}
         )
     except Exception as e:
-        print(e)
         return {'error':str(e)},500
 
 
-@app.route('/run_test', methods=['GET'])
+@app.route('/run_test', methods=['POST','GET'])
 def run_test():
     try:
         resp = run_test_script()
-        print('running test')
         if isinstance(resp, dict) and resp.get('error'):
             return {'error': resp['error']}
 
         if not os.path.exists("results/result_log.txt"):
-            with open('results/result_log.txt') as f:
-                log_details = f.read()
-            return {'error': 'Error in reading the log.', 'log': log_details}, 500
+            return {'error': 'Result log not found. Generate the test script first.'}, 500
 
         return Response(
             stream_with_context(interpret_log()),

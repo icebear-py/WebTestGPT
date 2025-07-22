@@ -2,7 +2,7 @@ import requests,json
 import os
 from openai import OpenAI
 from dotenv import load_dotenv
-
+import time
 load_dotenv()
 OpenAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
@@ -70,6 +70,7 @@ def build_prompt(dom: dict) -> list:
 
     return [system_prompt.strip(),user_prompt.strip()]
 
+
 def call_llm(system_prompt: str, user_prompt: str):
     from openai import OpenAI
     openai = OpenAI(
@@ -99,17 +100,22 @@ def call_llm(system_prompt: str, user_prompt: str):
         yield f"# Error: {str(e)}"
 
 
-
 conversation_history = []
 def generate_test_script(dom: dict):
-    prompt = build_prompt(dom)
-    test_script = ""
-    os.makedirs("test_scripts", exist_ok=True)
-    with open("test_scripts/test_script.py", "w", encoding="utf-8") as f:
-        for chunk in call_llm(prompt[0], prompt[1]):
-            test_script += str(chunk)
-            yield chunk
-        f.write(clean_code_response(test_script))
+    try:
+        prompt = build_prompt(dom)
+        test_script = ""
+        os.makedirs("test_scripts", exist_ok=True)
+        with open("test_scripts/test_script.py", "w", encoding="utf-8") as f:
+            for chunk in call_llm(prompt[0], prompt[1]):
+                test_script += str(chunk)
+                yield chunk
+            f.write(clean_code_response(test_script))
+    except Exception as e:
+        yield f"# Generator Error: {str(e)}"
+
+
+
 
 dom_demo = {'isError': 0, 'url': 'https://demo.automationtesting.in/', 'title': 'Index', 'elements': [{'tag': 'button', 'type': 'button', 'name': None, 'placeholder': None, 'text': 'Sign In', 'selector': '<button id="btn1" type="button" class="btn btn-primary-outline" style="background-color:#0177b5">Sign In</button>'}, {'tag': 'button', 'type': 'button', 'name': None, 'placeholder': None, 'text': 'Skip Sign In', 'selector': '<button id="btn2" type="button" class="btn btn-primary-outline" style=" background-color: #0177b5 ;">Skip Sign In</button>'}, {'tag': 'input', 'type': 'text', 'name': None, 'placeholder': 'Email id for Sign Up', 'text': '', 'selector': '<input id="email" type="text" placeholder="Email id for Sign Up" ng-model="emailid" autofocus="">'}]}
 dom_ansh = {'isError': 0, 'url': 'https://anshweather.netlify.app/', 'title': 'Weather api', 'elements': [{'tag': 'input', 'type': 'search', 'name': None, 'placeholder': 'Enter city name', 'text': '', 'selector': '<input type="search" placeholder="Enter city name" class="py-1 pl-2 rounded-3xl font-bold bg-white/10 md:text-xl text-white" id="searchinput">'}]}
