@@ -97,6 +97,7 @@ with col1:
             ) as response:
                 response.raise_for_status()
                 run_log = ""
+                st.session_state["output_content"] = ""
                 for chunk in response.iter_content(chunk_size=None):
                     if chunk:
                         decoded = chunk.decode("utf-8")
