@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>POST JSON to Flask</title>
+</head>
+<body>
+  <h2>Send JSON to /generate_script</h2>
+
+  <label>URL:</label><br>
+  <input type="text" id="urlInput" value="https://example.com"><br><br>
+
+  <button onclick="sendRequest()">Send POST</button>
+
+  <pre id="response"></pre>
+
+  <script>
+    async function sendRequest() {
+      const url = document.getElementById('urlInput').value;
+
+      const response = await fetch('http://localhost:5000/generate_script', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ url })
+      });
+
+      const result = await response.json();
+      document.getElementById('response').textContent = JSON.stringify(result, null, 2);
+    }
+  </script>
+</body>
+</html>
