@@ -17,7 +17,7 @@ def is_useful(element):
 
 def extract_dom(url: str) -> dict:
     with sync_playwright() as p:
-        browser = p.firefox.launch(headless=True)
+        browser = p.chromium.launch(headless=True, args=["--no-sandbox"])
         page = browser.new_page()
         try:
             page.goto(url, timeout=15000)
