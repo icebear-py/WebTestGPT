@@ -24,7 +24,7 @@ st.markdown("""
 components.html("""
 <script>
 window.addEventListener('beforeunload', function (e) {
-    navigator.sendBeacon('http://localhost:5000/flush');
+    navigator.sendBeacon('https://webtestgpt.onrender.com/flush');
 });
 </script>
 """, height=0)
@@ -71,9 +71,14 @@ with col1:
         set_status("⚡ Generating test script...")
         try:
             with requests.post(
-                "http://localhost:5000/generate_script",
+                "https://webtestgpt.onrender.com/generate_script",
                 json={"url": url},
-                stream=True,
+                headers={
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:66.0) Gecko/20100101 Firefox/66.0",
+                    "Accept-Encoding": "*",
+                    "Connection": "keep-alive"
+                },
+                stream=True
             ) as response:
                 response.raise_for_status()
                 for chunk in response.iter_content(chunk_size=None):
@@ -92,7 +97,7 @@ with col1:
         set_status("🔄 Running test script...")
         try:
             with requests.get(
-                "http://localhost:5000/run_test",
+                "https://webtestgpt.onrender.com/run_test",
                 stream=True,
             ) as response:
                 response.raise_for_status()
@@ -150,7 +155,13 @@ with col2:
         render_chat(show_spinner=True)
         bot_response = ""
         try:
-            with requests.post("http://localhost:5000/chat", json={"user": user_input}, stream=True) as response:
+            with requests.post("https://webtestgpt.onrender.com/chat",
+                               json={"user": user_input},
+                               headers={
+                                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.1.2222.33 Safari/537.36",
+                                "Accept-Encoding": "*",
+                                "Connection": "keep-alive"},
+                               stream=True) as response:
                 response.raise_for_status()
                 for chunk in response.iter_content(chunk_size=None):
                     if chunk:
