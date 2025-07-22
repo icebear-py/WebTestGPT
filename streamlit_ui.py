@@ -21,13 +21,17 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-components.html("""
-<script>
-window.addEventListener('beforeunload', function (e) {
-    navigator.sendBeacon('https://webtestgpt.onrender.com/flush');
-});
-</script>
-""", height=0)
+components.html(
+    """
+    <script>
+    function callFlush() {
+      navigator.sendBeacon("https://your-flask-service.onrender.com/flush");
+    }
+    window.addEventListener('unload', callFlush);
+    window.addEventListener('beforeunload', callFlush);
+    </script>
+    """, height=0
+)
 
 with col1:
     st.header("🧪 Test your website")

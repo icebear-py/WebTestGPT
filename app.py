@@ -74,7 +74,7 @@ def chat():
         content_type='text/plain'
     )
 
-@app.route('/flush', methods=['POST'])
+@app.route('/flush', methods=['POST','GET'])
 def flush():
     try:
         flush_memory()
@@ -83,4 +83,4 @@ def flush():
         return jsonify({'error': str(e)}), 204
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(debug=True)
