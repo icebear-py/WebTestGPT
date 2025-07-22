@@ -2,3 +2,8 @@ flask
 playwright
 requests
 python-dotenv
+openai
+flask_cors
+gunicorn==23.0.0
+
+
