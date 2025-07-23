@@ -4,6 +4,9 @@ After test script generation, TestGPT executes these scripts on the server and p
 
 <i>Note : Deployed site may take time to load for the first time since flask app is deployed on free deploying service (Render).</i>
 
+## 🖼️ Sample Dashboard
+![SaaS AI dashboard in action](assets/gen.jpg)
+
 ## ✨ Features
 - **Automated Test Generation:** Paste any website URL—TestGPT extracts the DOM, formulates prompts, and uses a large language model to synthesize and stream Playwright E2E tests dynamically.
 - **Script Execution & Analysis:** All generated tests run server-side. The system parses results and automatically produces a human-readable and machine-parseable report, detailing which user flows/specific features pass or fail and why.
